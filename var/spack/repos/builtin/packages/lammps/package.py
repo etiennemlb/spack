@@ -773,6 +773,25 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
 
     root_cmakelists_dir = "cmake"
 
+    def flag_handler(self, name, flags):
+        if flags is None:
+            flags = []
+
+        wrapper_flags = []
+        environment_flags = []
+        build_system_flags = []
+
+        if "+rocm ^cray-mpich" in self.spec:
+            gtl_lib = self.spec["cray-mpich"].package.gtl_lib
+            build_system_flags.extend(gtl_lib.get(name) or [])
+    
+        if "+rocm" in self.spec:
+            # hipcc is not wrapped, we need to pass the flags via the build 
+            # system.
+            build_system_flags.extend(flags)
+        
+        return (wrapper_flags, environment_flags, build_system_flags)
+
     def cmake_args(self):
         spec = self.spec
 
