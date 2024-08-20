@@ -775,7 +775,6 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
 
     def flag_handler(self, name, flags):
         wrapper_flags = []
-        environment_flags = []
         build_system_flags = []
 
         if self.spec.satisfies("+rocm"):
@@ -785,8 +784,10 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
             # hipcc is not wrapped, we need to pass the flags via the build
             # system.
             build_system_flags.extend(flags)
+        else:
+            wrapper_flags.extend(flags)
 
-        return (wrapper_flags, environment_flags, build_system_flags)
+        return (wrapper_flags, [], build_system_flags)
 
     def cmake_args(self):
         spec = self.spec
