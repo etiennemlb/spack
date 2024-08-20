@@ -89,7 +89,7 @@ class CrayMpich(Package, ROCmPackage):
         GTL_library = self.gtl_lib
 
         if len(GTL_library) > 0:
-            if "+rocm" in dependent_spec:
+            if self.spec.satisfies("+rocm"):
                 # -L/opt/cray/pe/mpich/8.1.28/gtl/lib
                 # -Wl,-rpath,/opt/cray/pe/mpich/8.1.28/gtl/lib
                 # -lmpi_gtl_hsa
@@ -184,7 +184,7 @@ class CrayMpich(Package, ROCmPackage):
         ]
 
         for GTL_kind in GTL_kinds:
-            if f"{GTL_kind[0]} {GTL_kind[1]}=*" in self.spec:
+            if self.spec.satisfies(f"{GTL_kind[0]} {GTL_kind[1]}=*"):
                 GPU_architecture_set = set(self.spec.variants[GTL_kind[1]].value)
                 if len(GPU_architecture_set) >= 1 and not GPU_architecture_set.issubset(
                     GTL_kind[3]
@@ -207,7 +207,7 @@ class CrayMpich(Package, ROCmPackage):
 
                 if len(GTL_shared_libraries) != 1:
                     # TODO(Etienne M): Assertion failure. The cray-mpich does
-                    # not offer a GTL for our GTL_target or offers too many ?
+                    # not offer a GTL for our targets or offers too many ?
                     tty.error("More than one GTL was found for the targeted GPUs.")
                     break
 
