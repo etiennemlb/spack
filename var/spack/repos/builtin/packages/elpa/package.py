@@ -137,6 +137,19 @@ class Elpa(AutotoolsPackage, CudaPackage, ROCmPackage):
     build_directory = "spack-build"
     parallel = False
 
+    def flag_handler(self, name, flags):
+        if "+rocm" in self.spec:
+            if name == "ldflags":
+                flags.append("-L{}".format(self.spec["hip"].prefix))
+            if name == "ldlibs":
+                flags.extend(
+                    [
+                        "-l{}".format(library.split("lib")[1])
+                        for library in self.spec["hip"].package.libraries
+                    ]
+                )
+        return flags, None, None
+
     def configure_args(self):
         spec = self.spec
         options = []
