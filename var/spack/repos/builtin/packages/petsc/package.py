@@ -231,6 +231,9 @@ class Petsc(Package, CudaPackage, ROCmPackage):
     patch("disable-DEPRECATED_ENUM.diff", when="@3.14.1 +cuda")
     patch("revert-3.18.0-ver-format-for-dealii.patch", when="@3.18.0")
 
+    # TODO(Etienne M): When was the cce support added ?
+    patch("crape.diff", when="%cce")
+
     depends_on("diffutils", type="build")
     # not listed as a "build" dependency - so that slepc build gets the same dependency
     depends_on("gmake")
