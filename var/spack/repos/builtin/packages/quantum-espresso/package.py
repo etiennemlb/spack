@@ -328,8 +328,6 @@ class QuantumEspresso(CMakePackage, Package):
     patch_checksum = "69f7fbd72aba810c35a0b034188e45bea8f9f11d3150c0715e1b3518d5c09248"
     patch(patch_url, sha256=patch_checksum, when="@6.8+qmcpack")
 
-    patch("configure.patch")
-
     # 6.7
     patch_url = "https://raw.githubusercontent.com/QMCPACK/qmcpack/v3.13.0/external_codes/quantum_espresso/add_pw2qmcpack_to_qe-6.7.0.diff"
     patch_checksum = "72564c168231dd4a1279a74e76919af701d47cee9a851db6e205753004fe9bb5"
