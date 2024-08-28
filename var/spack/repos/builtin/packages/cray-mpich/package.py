@@ -86,25 +86,6 @@ class CrayMpich(Package, ROCmPackage):
         env.set("MPICH_F90", dependent_module.spack_fc)
         env.set("MPICH_FC", dependent_module.spack_fc)
 
-        GTL_library = self.gtl_lib
-
-        if len(GTL_library) > 0:
-            if self.spec.satisfies("+rocm"):
-                # -L/opt/cray/pe/mpich/8.1.28/gtl/lib
-                # -Wl,-rpath,/opt/cray/pe/mpich/8.1.28/gtl/lib
-                # -lmpi_gtl_hsa
-                env.append_path(
-                    "HIPCC_LINK_FLAGS_APPEND",
-                    "{} {}".format(
-                        " ".join(GTL_library["ldflags"]),
-                        " ".join(GTL_library["ldlibs"]),
-                    ),
-                    separator=" ",
-                )
-            else:
-                tty.error("Unreachable.")
-                exit(1)
-
     def setup_dependent_package(self, module, dependent_spec):
         spec = self.spec
         if spec.satisfies("+wrappers"):
@@ -174,12 +155,12 @@ class CrayMpich(Package, ROCmPackage):
                 "libmpi_gtl_hsa",
                 set(["gfx906", "gfx908", "gfx90a", "gfx940", "gfx942"]),
             ],
-            [
-                "+cuda",
-                "cuda_arch",
-                "libmpi_gtl_cuda",
-                set(["nvidia70", "nvidia80", "nvidia90"]),
-            ],
+            # [
+            #     "+cuda",
+            #     "cuda_arch",
+            #     "libmpi_gtl_cuda",
+            #     set(["nvidia70", "nvidia80", "nvidia90"]),
+            # ],
             # ["", "", "libmpi_gtl_ze", ["ponteVecchio"]]
         ]
 
