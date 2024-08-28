@@ -24,7 +24,7 @@ class Unzip(MakefilePackage):
     # clang and oneapi need this patch, likely others
     # There is no problem with it on gcc, so make it a catch all
     patch("configure-cflags.patch")
-    patch("strip.patch")
+    patch("strip.patch", when="%cce@:18.0.1")
 
     def get_make_args(self):
         make_args = ["-f", join_path("unix", "Makefile")]
@@ -34,22 +34,6 @@ class Unzip(MakefilePackage):
         cflags.append("-Wno-error=implicit-int")
         cflags.append("-DLARGE_FILE_SUPPORT")
 
-        # NOTE: No quotes around the flags, its already going to be passed as
-        # one argument. If we use quotes, we'll call make like so:
-        # $ make ... 'LOC="-Wno-error=implicit-function-declaration -Wno-error=implicit-int -DLARGE_FILE_SUPPORT"'
-        # Which will execute target `flags:  unix/configure` giving:
-        # $ sh unix/configure "cc" "-I. -Ibzip2 -DUNIX "-Wno-error=implicit-function-declaration -Wno-error=implicit-int -DLARGE_FILE_SUPPORT"" "bzip2"
-        # Notice how the double quoting is broken. This misleads the script into
-        # promoting `-Wno-error=implicit-int` as the directory containing the
-        # bzip2 libraries. For instance:
-        # $ cc -o unzip -L-Wno-error=implicit-int unzip.o ... unshrink.o zipinfo.o unix.o -s
-        # Now that issue in itself is not that bad, it wont change the build
-        # process.
-        # The next issue is that the "-s" flag that gcc takes in and passes
-        # automatically to the linker is not supported by all compiler (it
-        # crashes cray's crayclang..). One can instead use `-Wl,-s`.
-        # Lastly, if `-Wl,-s` is not felt like a good fix, we should probably
-        # restrict unzip to the gcc compiler ?
         make_args.append(f"LOC={' '.join(cflags)}")
         return make_args
 
