@@ -138,10 +138,11 @@ class Elpa(AutotoolsPackage, CudaPackage, ROCmPackage):
     parallel = False
 
     def flag_handler(self, name, flags):
-        if "+rocm" in self.spec:
-            if name == "ldflags":
-                flags.append("-L{}".format(self.spec["hip"].prefix))
+        if self.spec.satisfies("+rocm"):
             if name == "ldlibs":
+                # NOTE: hipcc may be used to build some files but the final link
+                # step is not done using hipcc. We must provide the libs.
+                # SPACK_LINK_DIRS already contains the library path.
                 flags.extend(
                     [
                         "-l{}".format(library.split("lib")[1])
