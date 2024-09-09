@@ -34,6 +34,8 @@ class CrayMpich(Package, CudaPackage, ROCmPackage):
     depends_on("cray-pmi")
     depends_on("libfabric")
 
+    requires("platform=linux", msg="Cray MPICH is only available on Cray")
+
     # cray-mpich 8.1.7: features MPI compiler wrappers
     variant("wrappers", default=True, when="@8.1.7:", description="enable MPI wrappers")
 
