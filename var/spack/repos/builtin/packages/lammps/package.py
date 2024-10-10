@@ -5,6 +5,7 @@
 import datetime as dt
 import os
 
+from spack.build_environment import optimization_flags
 from spack.package import *
 
 
@@ -734,7 +735,6 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     conflicts("+cuda", when="+opencl")
     conflicts("+rocm", when="+opencl")
     conflicts("+body", when="+poems@:20180628")
-    conflicts("+latte", when="@:20170921")
     conflicts("+python", when="~lib")
     conflicts("+qeq", when="~manybody")
     conflicts("+user-atc", when="~manybody")
@@ -915,7 +915,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
             args.append(self.define("CMAKE_CXX_FLAGS_RELWITHDEBINFO", cxx_flags))
 
         # Overwrite generic cpu tune option
-        cmake_tune_flags = spec.architecture.target.optimization_flags(spec.compiler)
+        cmake_tune_flags = optimization_flags(self.compiler, spec.target)
         args.append(self.define("CMAKE_TUNE_FLAGS", cmake_tune_flags))
 
         args.append(self.define_from_variant("LAMMPS_SIZES", "lammps_sizes"))

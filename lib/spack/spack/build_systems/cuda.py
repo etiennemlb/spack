@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+import re
+from typing import Iterable, List
+
 import spack.variant
 from spack.directives import conflicts, depends_on, variant
 from spack.multimethod import when
@@ -44,6 +47,7 @@ class CudaPackage(PackageBase):
         "87",
         "89",
         "90",
+        "90a",
     )
 
     # FIXME: keep cuda and cuda_arch separate to make usage easier until
@@ -69,6 +73,27 @@ class CudaPackage(PackageBase):
             ).format(s)
             for s in arch_list
         ]
+
+    @staticmethod
+    def compute_capabilities(arch_list: Iterable[str]) -> List[str]:
+        """Adds a decimal place to each CUDA arch.
+
+        >>> compute_capabilities(['90', '90a'])
+        ['9.0', '9.0a']
+
+        Args:
+            arch_list: A list of integer strings, optionally followed by a suffix.
+
+        Returns:
+            A list of float strings, optionally followed by a suffix
+        """
+        pattern = re.compile(r"(\d+)")
+        capabilities = []
+        for arch in arch_list:
+            _, number, letter = re.split(pattern, arch)
+            number = "{0:.1f}".format(float(number) / 10.0)
+            capabilities.append(number + letter)
+        return capabilities
 
     depends_on("cuda", when="+cuda")
 
@@ -215,6 +240,11 @@ class CudaPackage(PackageBase):
         conflicts("%intel@19.1:", when="+cuda ^cuda@:10.1")
         conflicts("%intel@19.2:", when="+cuda ^cuda@:11.1.0")
         conflicts("%intel@2021:", when="+cuda ^cuda@:11.4.0")
+
+        # ARM
+        # https://github.com/spack/spack/pull/39666#issuecomment-2377609263
+        # Might need to be expanded to other gcc versions
+        conflicts("%gcc@13.2.0", when="+cuda ^cuda@:12.4 target=aarch64:")
 
         # XL is mostly relevant for ppc64le Linux
         conflicts("%xl@:12,14:", when="+cuda ^cuda@:9.1")

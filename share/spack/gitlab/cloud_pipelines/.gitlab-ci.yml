@@ -181,6 +181,7 @@ default:
     - cat /proc/loadavg || true
     - cat /proc/meminfo | grep 'MemTotal\|MemFree' || true
     - . "./share/spack/setup-env.sh"
+    - spack arch
   after_script:
     - cat /proc/loadavg || true
     - cat /proc/meminfo | grep 'MemTotal\|MemFree' || true
@@ -376,7 +377,7 @@ e4s-neoverse_v1-build:
 
 e4s-rocm-external-generate:
   extends: [ ".e4s-rocm-external", ".generate-x86_64"]
-  image: ecpe4s/ubuntu22.04-runner-amd64-gcc-11.4-rocm6.1.2:2024.07.22
+  image: ecpe4s/ubuntu22.04-runner-amd64-gcc-11.4-rocm6.2.0:2024.09.11
 
 e4s-rocm-external-build:
   extends: [ ".e4s-rocm-external", ".build" ]
@@ -690,7 +691,7 @@ tutorial-build:
 
 ml-linux-x86_64-cpu-generate:
   extends: [ ".generate-x86_64", .ml-linux-x86_64-cpu, ".tags-x86_64_v4" ]
-  image: ghcr.io/spack/ubuntu-22.04:v2024-05-07
+  image: ghcr.io/spack/ubuntu-24.04:v2024-09-05-v2
 
 ml-linux-x86_64-cpu-build:
   extends: [ ".build", ".ml-linux-x86_64-cpu" ]
@@ -713,7 +714,7 @@ ml-linux-x86_64-cpu-build:
 
 ml-linux-x86_64-cuda-generate:
   extends: [ ".generate-x86_64", .ml-linux-x86_64-cuda, ".tags-x86_64_v4" ]
-  image: ghcr.io/spack/ubuntu-22.04:v2024-05-07
+  image: ghcr.io/spack/ubuntu-24.04:v2024-09-05-v2
 
 ml-linux-x86_64-cuda-build:
   extends: [ ".build", ".ml-linux-x86_64-cuda"  ]
@@ -736,7 +737,7 @@ ml-linux-x86_64-cuda-build:
 
 ml-linux-x86_64-rocm-generate:
   extends: [ ".generate-x86_64", .ml-linux-x86_64-rocm, ".tags-x86_64_v4" ]
-  image: ghcr.io/spack/ubuntu-22.04:v2024-05-07
+  image: ghcr.io/spack/ubuntu-24.04:v2024-09-05-v2
 
 ml-linux-x86_64-rocm-build:
   extends: [ ".build", ".ml-linux-x86_64-rocm" ]

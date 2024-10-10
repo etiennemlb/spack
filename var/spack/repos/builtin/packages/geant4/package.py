@@ -78,6 +78,7 @@ class Geant4(CMakePackage):
     variant("x11", default=False, description="Optional X11 support")
     variant("motif", default=False, description="Optional motif support")
     variant("qt", default=False, description="Enable Qt support")
+    variant("hdf5", default=False, description="Enable HDF5 support", when="@10.4:")
     variant("python", default=False, description="Enable Python bindings", when="@10.6.2:11.0")
     variant("tbb", default=False, description="Use TBB as a tasking backend", when="@11:")
     variant("timemory", default=False, description="Use TiMemory for profiling", when="@9.5:")
@@ -140,6 +141,9 @@ class Geant4(CMakePackage):
         depends_on("vecgeom@1.1.0", when="@10.5.0:10.5")
         depends_on("vecgeom@0.5.2", when="@10.4.0:10.4")
 
+    with when("+hdf5"):
+        depends_on("hdf5 +threadsafe")
+
     def std_when(values):
         for v in values:
             if isinstance(v, _ConditionalVariantValues):
@@ -190,6 +194,9 @@ class Geant4(CMakePackage):
 
     # See https://bugzilla-geant4.kek.jp/show_bug.cgi?id=2556
     patch("package-cache.patch", level=1, when="@10.7.0:11.1.2^cmake@3.17:")
+
+    # Issue with Twisted tubes, see https://bugzilla-geant4.kek.jp/show_bug.cgi?id=2619
+    patch("twisted-tubes.patch", level=1, when="@11.2.0:11.2.2")
 
     # NVHPC: "thread-local declaration follows non-thread-local declaration"
     conflicts("%nvhpc", when="+threads")
@@ -315,6 +322,8 @@ class Geant4(CMakePackage):
             if spec.satisfies("^[virtuals=qmake] qt-base"):
                 options.append(self.define("GEANT4_USE_QT_QT6", True))
             options.append(self.define("QT_QMAKE_EXECUTABLE", spec["qmake"].prefix.bin.qmake))
+
+        options.append(self.define_from_variant("GEANT4_USE_HDF5", "hdf5"))
 
         options.append(self.define_from_variant("GEANT4_USE_VTK", "vtk"))
 

@@ -1817,6 +1817,7 @@ complete -c spack -n '__fish_spack_using_command find' -l end-date -r -d 'latest
 
 # spack gc
 set -g __fish_spack_optspecs_spack_gc h/help E/except-any-environment e/except-environment= b/keep-build-dependencies y/yes-to-all
+complete -c spack -n '__fish_spack_using_command_pos_remainder 0 gc' -f -a '(__fish_spack_installed_specs)'
 complete -c spack -n '__fish_spack_using_command gc' -s h -l help -f -a help
 complete -c spack -n '__fish_spack_using_command gc' -s h -l help -d 'show this help message and exit'
 complete -c spack -n '__fish_spack_using_command gc' -s E -l except-any-environment -f -a except_any_environment
@@ -1954,7 +1955,7 @@ complete -c spack -n '__fish_spack_using_command help' -l spec -f -a guide
 complete -c spack -n '__fish_spack_using_command help' -l spec -d 'help on the package specification syntax'
 
 # spack info
-set -g __fish_spack_optspecs_spack_info h/help a/all detectable maintainers no-dependencies no-variants no-versions phases tags tests virtuals variants-by-name
+set -g __fish_spack_optspecs_spack_info h/help a/all detectable maintainers namespace no-dependencies no-variants no-versions phases tags tests virtuals variants-by-name
 complete -c spack -n '__fish_spack_using_command_pos 0 info' -f -a '(__fish_spack_packages)'
 complete -c spack -n '__fish_spack_using_command info' -s h -l help -f -a help
 complete -c spack -n '__fish_spack_using_command info' -s h -l help -d 'show this help message and exit'
@@ -1964,6 +1965,8 @@ complete -c spack -n '__fish_spack_using_command info' -l detectable -f -a detec
 complete -c spack -n '__fish_spack_using_command info' -l detectable -d 'output information on external detection'
 complete -c spack -n '__fish_spack_using_command info' -l maintainers -f -a maintainers
 complete -c spack -n '__fish_spack_using_command info' -l maintainers -d 'output package maintainers'
+complete -c spack -n '__fish_spack_using_command info' -l namespace -f -a namespace
+complete -c spack -n '__fish_spack_using_command info' -l namespace -d 'output package namespace'
 complete -c spack -n '__fish_spack_using_command info' -l no-dependencies -f -a no_dependencies
 complete -c spack -n '__fish_spack_using_command info' -l no-dependencies -d 'do not output build, link, and run package dependencies'
 complete -c spack -n '__fish_spack_using_command info' -l no-variants -f -a no_variants
