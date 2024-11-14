@@ -32,7 +32,6 @@ import llnl.util.tty as tty
 from llnl.util.lang import classproperty, memoized
 from llnl.util.link_tree import LinkTree
 
-import spack.build_environment
 import spack.builder
 import spack.compilers
 import spack.config
@@ -50,7 +49,6 @@ import spack.spec
 import spack.store
 import spack.url
 import spack.util.environment
-import spack.util.executable
 import spack.util.path
 import spack.util.web
 from spack.error import InstallError, NoURLError, PackageError
@@ -624,6 +622,7 @@ class PackageBase(WindowsRPath, PackageViewMixin, RedistributionMixin, metaclass
     patches: Dict["spack.spec.Spec", List["spack.patch.Patch"]]
     variants: Dict["spack.spec.Spec", Dict[str, "spack.variant.Variant"]]
     languages: Dict["spack.spec.Spec", Set[str]]
+    splice_specs: Dict["spack.spec.Spec", Tuple["spack.spec.Spec", Union[None, str, List[str]]]]
 
     #: By default, packages are not virtual
     #: Virtual packages override this attribute
@@ -1017,7 +1016,7 @@ class PackageBase(WindowsRPath, PackageViewMixin, RedistributionMixin, metaclass
         * ``"none"``: filter out all ``-Werror*`` flags.
         * ``None``: respect the user's configuration (``"none"`` by default).
         """
-        if self.spec.satisfies("%nvhpc@:23.3") or self.spec.satisfies("%pgi"):
+        if self.spec.satisfies("%nvhpc@:23.3"):
             # Filtering works by replacing -Werror with -Wno-error, but older nvhpc and
             # PGI do not understand -Wno-error, so we disable filtering.
             return "all"
@@ -1855,13 +1854,22 @@ class PackageBase(WindowsRPath, PackageViewMixin, RedistributionMixin, metaclass
         #
         # BSD Make:
         #     make: don't know how to make test. Stop
+        #
+        # Note: "Stop." is not printed when running a Make jobserver (spack env depfile) that runs
+        # with `make -k/--keep-going`
         missing_target_msgs = [
-            "No rule to make target `{0}'.  Stop.",
-            "No rule to make target '{0}'.  Stop.",
-            "don't know how to make {0}. Stop",
+            "No rule to make target `{0}'.",
+            "No rule to make target '{0}'.",
+            "don't know how to make {0}.",
         ]
 
-        kwargs = {"fail_on_error": False, "output": os.devnull, "error": str}
+        kwargs = {
+            "fail_on_error": False,
+            "output": os.devnull,
+            "error": str,
+            # Remove MAKEFLAGS to avoid inherited flags from Make jobserver (spack env depfile)
+            "extra_env": {"MAKEFLAGS": ""},
+        }
 
         stderr = make("-n", target, **kwargs)
 
