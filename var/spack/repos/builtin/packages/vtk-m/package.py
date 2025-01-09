@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -53,7 +52,8 @@ class VtkM(CMakePackage, CudaPackage, ROCmPackage):
     version("1.2.0", sha256="44596e88b844e7626248fb8e96a38be25a0e585a22256b1c859208b23ef45171")
     version("1.1.0", sha256="55f42c417d3a41893230b2fd3b5c192daeee689a2193de10bf22a1ef5c24c7ad")
 
-    depends_on("cxx", type="build")  # generated
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     variant("shared", default=False, description="build shared libs")
 

@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -131,7 +130,7 @@ class Serialbox(CMakePackage):
             return libs
 
         msg = "Unable to recursively locate {0} libraries in {1}"
-        raise spack.error.NoLibrariesError(msg.format(self.spec.name, self.spec.prefix))
+        raise NoLibrariesError(msg.format(self.spec.name, self.spec.prefix))
 
     def flag_handler(self, name, flags):
         cmake_flags = []
