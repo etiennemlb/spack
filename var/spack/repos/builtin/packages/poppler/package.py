@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -77,9 +76,7 @@ class Poppler(CMakePackage):
 
     # Only needed to run `make test`
     resource(
-        name="test",
-        git="https://anongit.freedesktop.org/git/poppler/test.git",
-        placement="testdata",
+        name="test", git="git://git.freedesktop.org/git/poppler/test.git", placement="testdata"
     )
 
     def cmake_args(self):

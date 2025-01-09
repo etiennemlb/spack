@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -42,6 +41,8 @@ class ScalapackBase(CMakePackage):
 
     def flag_handler(self, name, flags):
         if name == "cflags":
+            if self.spec.satisfies("%cce"):
+                flags.append("-Wno-error=implicit-function-declaration")
             if self.spec.satisfies("%gcc@14:"):
                 # https://bugzilla.redhat.com/show_bug.cgi?id=2178710
                 flags.append("-std=gnu89")

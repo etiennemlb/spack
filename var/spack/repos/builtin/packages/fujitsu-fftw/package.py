@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -78,23 +77,23 @@ class FujitsuFftw(FftwBase):
             "ac_cv_prog_f77_v=-###",
         ]
 
-        if "+shared" in spec:
+        if spec.satisfies("+shared"):
             options.append("--enable-shared")
         else:
             options.append("--disable-shared")
 
-        if "+openmp" in spec:
+        if spec.satisfies("+openmp"):
             options.append("--enable-openmp")
             options.append("OPENMP_CFLAGS=-Kopenmp")
         else:
             options.append("--disable-openmp")
 
-        if "+threads" in spec:
+        if spec.satisfies("+threads"):
             options.append("--enable-threads")
         else:
             options.append("--disable-threads")
 
-        if "+mpi" in spec:
+        if spec.satisfies("+mpi"):
             options.append("--enable-mpi")
         else:
             options.append("--disable-mpi")

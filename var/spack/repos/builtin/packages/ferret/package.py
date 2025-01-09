@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -80,7 +79,7 @@ class Ferret(Package):
 
         work_dir = "FERRET" if "@:7.2" in spec else "."
         with working_dir(work_dir, create=False):
-            if "@7.3:" in spec:
+            if spec.satisfies("@7.3:"):
                 copy("site_specific.mk.in", "site_specific.mk")
                 copy(
                     "external_functions/ef_utility/site_specific.mk.in",
@@ -111,7 +110,7 @@ class Ferret(Package):
                 r"^(NETCDF4?_(LIB)?DIR).+", "\\1 = %s" % netcdff_prefix, "site_specific.mk"
             )
 
-            if "@:7.3" in spec:
+            if spec.satisfies("@:7.3"):
                 # Don't force using the static version of libz
                 filter_file(
                     r"\$\(LIBZ_DIR\)/lib64/libz.a", "-lz", "platform_specific.mk.x86_64-linux"
@@ -137,7 +136,7 @@ class Ferret(Package):
                 # Don't force using the static version of libgfortran
                 filter_file(r"-static-libgfortran", "", "platform_specific.mk.x86_64-linux")
 
-            if "@:7.4" in spec:
+            if spec.satisfies("@:7.4"):
                 compilers_spec_file = "platform_specific.mk.x86_64-linux"
             else:
                 compilers_spec_file = "site_specific.mk"
@@ -182,7 +181,7 @@ class Ferret(Package):
             make(parallel=False)
             make("install")
 
-        if "+datasets" in self.spec:
+        if self.spec.satisfies("+datasets"):
             mkdir(self.prefix.fer_dsets)
             install_tree("fer_dsets", self.prefix.fer_dsets)
 
@@ -199,7 +198,7 @@ class Ferret(Package):
         fer_descr = ["."]
         fer_grids = ["."]
 
-        if "+datasets" in self.spec:
+        if self.spec.satisfies("+datasets"):
             env.set("FER_DSETS", self.prefix.fer_dsets)
 
             fer_data.append(self.prefix.fer_dsets.data)

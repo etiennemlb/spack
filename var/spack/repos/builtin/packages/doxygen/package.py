@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -20,6 +19,7 @@ class Doxygen(CMakePackage):
 
     license("GPL-2.0-or-later")
 
+    version("1.12.0", sha256="5ca35e1258020df5fe8b21c3656aed156c317def4a81b7fe52f452edc9f35768")
     version("1.11.0", sha256="1fea49c69e51fec3dd2599947f6d48d9b1268bd5115b1bb08dffefc1fd5d19ee")
     version("1.10.0", sha256="795692a53136ca9bb9a6cd72656968af7858a78be7d6d011e12ab1dce6b9533c")
     version("1.9.8", sha256="77371e8a58d22d5e03c52729844d1043e9cbf8d0005ec5112ffa4c8f509ddde8")
@@ -136,16 +136,18 @@ class Doxygen(CMakePackage):
     def patch(self):
         if self.spec["iconv"].name != "libiconv":
             return
-        # On Linux systems, iconv is provided by libc. Since CMake finds the
-        # symbol in libc, it does not look for libiconv, which leads to linker
-        # errors. This makes sure that CMake always looks for the external
-        # libconv instead.
-        filter_file(
-            "check_function_exists(iconv_open ICONV_IN_GLIBC)",
-            "set(ICONV_IN_GLIBC FALSE)",
-            join_path("cmake", "FindIconv.cmake"),
-            string=True,
-        )
+
+        if self.spec.satisfies("@:1.11"):
+            # On Linux systems, iconv is provided by libc. Since CMake finds the
+            # symbol in libc, it does not look for libiconv, which leads to linker
+            # errors. This makes sure that CMake always looks for the external
+            # libconv instead.
+            filter_file(
+                "check_function_exists(iconv_open ICONV_IN_GLIBC)",
+                "set(ICONV_IN_GLIBC FALSE)",
+                join_path("cmake", "FindIconv.cmake"),
+                string=True,
+            )
 
     def cmake_args(self):
         return [

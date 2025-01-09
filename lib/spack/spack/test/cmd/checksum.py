@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -8,8 +7,8 @@ import argparse
 import pytest
 
 import spack.cmd.checksum
+import spack.error
 import spack.package_base
-import spack.parser
 import spack.repo
 import spack.spec
 import spack.stage
@@ -304,7 +303,7 @@ def test_checksum_deprecated_version(mock_packages, can_fetch_versions):
 
 def test_checksum_url(mock_packages, config):
     pkg_cls = spack.repo.PATH.get_pkg_class("zlib")
-    with pytest.raises(spack.parser.SpecSyntaxError):
+    with pytest.raises(spack.error.SpecSyntaxError):
         spack_checksum(f"{pkg_cls.url}")
 
 

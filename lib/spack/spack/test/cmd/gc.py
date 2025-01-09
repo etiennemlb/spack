@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -11,12 +10,11 @@ import spack.environment as ev
 import spack.main
 import spack.spec
 import spack.traverse
+from spack.installer import PackageInstaller
 
 gc = spack.main.SpackCommand("gc")
 add = spack.main.SpackCommand("add")
 install = spack.main.SpackCommand("install")
-
-pytestmark = pytest.mark.not_on_windows("does not run on windows")
 
 
 @pytest.mark.db
@@ -29,7 +27,7 @@ def test_gc_without_build_dependency(mutable_database):
 def test_gc_with_build_dependency(mutable_database):
     s = spack.spec.Spec("simple-inheritance")
     s.concretize()
-    s.package.do_install(fake=True, explicit=True)
+    PackageInstaller([s.package], explicit=True, fake=True).install()
 
     assert "There are no unused specs." in gc("-yb")
     assert "Successfully uninstalled cmake" in gc("-y")
@@ -37,10 +35,26 @@ def test_gc_with_build_dependency(mutable_database):
 
 
 @pytest.mark.db
+def test_gc_with_constraints(mutable_database):
+    s_cmake1 = spack.spec.Spec("simple-inheritance ^cmake@3.4.3").concretized()
+    s_cmake2 = spack.spec.Spec("simple-inheritance ^cmake@3.23.1").concretized()
+    PackageInstaller([s_cmake1.package], explicit=True, fake=True).install()
+    PackageInstaller([s_cmake2.package], explicit=True, fake=True).install()
+
+    assert "There are no unused specs." in gc("python")
+
+    assert "Successfully uninstalled cmake@3.4.3" in gc("-y", "cmake@3.4.3")
+    assert "There are no unused specs." in gc("-y", "cmake@3.4.3")
+
+    assert "Successfully uninstalled cmake" in gc("-y", "cmake@3.23.1")
+    assert "There are no unused specs." in gc("-y", "cmake")
+
+
+@pytest.mark.db
 def test_gc_with_environment(mutable_database, mutable_mock_env_path):
     s = spack.spec.Spec("simple-inheritance")
     s.concretize()
-    s.package.do_install(fake=True, explicit=True)
+    PackageInstaller([s.package], explicit=True, fake=True).install()
 
     e = ev.create("test_gc")
     with e:
@@ -56,7 +70,7 @@ def test_gc_with_environment(mutable_database, mutable_mock_env_path):
 def test_gc_with_build_dependency_in_environment(mutable_database, mutable_mock_env_path):
     s = spack.spec.Spec("simple-inheritance")
     s.concretize()
-    s.package.do_install(fake=True, explicit=True)
+    PackageInstaller([s.package], explicit=True, fake=True).install()
 
     e = ev.create("test_gc")
     with e:
@@ -108,7 +122,7 @@ def test_gc_except_any_environments(mutable_database, mutable_mock_env_path):
 def test_gc_except_specific_environments(mutable_database, mutable_mock_env_path):
     s = spack.spec.Spec("simple-inheritance")
     s.concretize()
-    s.package.do_install(fake=True, explicit=True)
+    PackageInstaller([s.package], explicit=True, fake=True).install()
 
     assert mutable_database.query_local("zmpi")
 
@@ -135,7 +149,7 @@ def test_gc_except_nonexisting_dir_env(mutable_database, mutable_mock_env_path, 
 def test_gc_except_specific_dir_env(mutable_database, mutable_mock_env_path, tmpdir):
     s = spack.spec.Spec("simple-inheritance")
     s.concretize()
-    s.package.do_install(fake=True, explicit=True)
+    PackageInstaller([s.package], explicit=True, fake=True).install()
 
     assert mutable_database.query_local("zmpi")
 

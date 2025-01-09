@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 from spack.package import *
@@ -15,7 +14,7 @@ class Halide(CMakePackage, PythonExtension):
 
     license("MIT")
 
-    maintainers("wraith1995")
+    maintainers("wraith1995", "alexreinking")
     version("main", branch="main")
     version("18.0.0", sha256="1176b42a3e2374ab38555d9316c78e39b157044b5a8e765c748bf3afd2edb351")
     version("17.0.2", sha256="5f3a43ba27b47d3dcbcee963faabf1d633d4151031e60b6ff7cc62472e5677a0")
@@ -118,7 +117,7 @@ class Halide(CMakePackage, PythonExtension):
         for target in llvm_targets:
             args += [self.define("TARGET_{0}".format(target[0]), target[1])]
 
-        if "+python" in spec:
+        if spec.satisfies("+python"):
             args += [
                 self.define("PYBIND11_USE_FETCHCONTENT", False),
                 self.define("Halide_INSTALL_PYTHONDIR", python_platlib),

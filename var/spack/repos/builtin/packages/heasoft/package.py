@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -93,7 +92,7 @@ class Heasoft(AutotoolsPackage):
             join_path("tcltk", "BUILD_DIR", "hd_config_info"),
         )
 
-        if "+X" in self.spec:
+        if self.spec.satisfies("+X"):
             filter_file(
                 r"(\s+XDIR => ).*",
                 r"\1'{0}',".format(self.spec["libx11"].libs.directories[0]),
@@ -109,7 +108,7 @@ class Heasoft(AutotoolsPackage):
 
         config_args += self.enable_or_disable("x", variant="X")
 
-        if "+X" in self.spec:
+        if self.spec.satisfies("+X"):
             config_args.extend(
                 [
                     "--x-includes={0}".format(self.spec["libx11"].headers.directories[0]),

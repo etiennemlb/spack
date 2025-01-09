@@ -1,11 +1,9 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 import sys
 
 from spack.package import *
-from spack.util.executable import which_string
 
 
 class Ninja(Package):
@@ -26,6 +24,7 @@ class Ninja(Package):
 
     version("kitware", branch="features-for-fortran", git="https://github.com/Kitware/ninja.git")
     version("master", branch="master")
+    version("1.12.1", sha256="821bdff48a3f683bc4bb3b6f0b5fe7b2d647cf65d52aeb63328c91a6c6df285a")
     version("1.12.0", sha256="8b2c86cd483dc7fcb7975c5ec7329135d210099a89bc7db0590a07b0bbfe49a5")
     version("1.11.1", sha256="31747ae633213f1eda3842686f83c2aa1412e0f5691d1c14dbbcc67fe7400cea")
     version("1.11.0", sha256="3c6ba2e66400fe3f1ae83deb4b235faf3137ec20bd5b08c29bfc368db143e4c6")

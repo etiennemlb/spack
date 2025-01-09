@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -83,7 +82,7 @@ class Cairo(AutotoolsPackage):
     def configure_args(self):
         args = ["--disable-trace", "--enable-tee"]  # can cause problems with libiberty
 
-        if "+X" in self.spec:
+        if self.spec.satisfies("+X"):
             args.extend(["--enable-xlib", "--enable-xcb"])
         else:
             args.extend(["--disable-xlib", "--disable-xcb"])

@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -114,14 +113,14 @@ class Chameleon(CMakePackage, CudaPackage):
             )
 
         if spec.satisfies("~simgrid"):
-            if "^intel-mkl" in spec or "^intel-parallel-studio+mkl" in spec:
-                if "threads=none" in spec:
+            if spec.satisfies("^intel-mkl") or spec.satisfies("^intel-parallel-studio+mkl"):
+                if spec.satisfies("threads=none"):
                     args.extend([self.define("BLA_VENDOR", "Intel10_64lp_seq")])
                 else:
                     args.extend([self.define("BLA_VENDOR", "Intel10_64lp")])
-            elif "^netlib-lapack" in spec:
+            elif spec.satisfies("^netlib-lapack"):
                 args.extend([self.define("BLA_VENDOR", "Generic")])
-            elif "^openblas" in spec:
+            elif spec.satisfies("^openblas"):
                 args.extend([self.define("BLA_VENDOR", "OpenBLAS")])
 
         return args

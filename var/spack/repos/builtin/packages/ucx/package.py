@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 import shutil
@@ -11,7 +10,7 @@ class Ucx(AutotoolsPackage, CudaPackage):
     """a communication library implementing high-performance messaging for
     MPI/PGAS frameworks"""
 
-    homepage = "http://www.openucx.org"
+    homepage = "https://www.openucx.org"
     url = "https://github.com/openucx/ucx/releases/download/v1.3.1/ucx-1.3.1.tar.gz"
     git = "https://github.com/openucx/ucx.git"
 

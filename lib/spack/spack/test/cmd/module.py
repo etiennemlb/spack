@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -11,8 +10,11 @@ import pytest
 import spack.config
 import spack.main
 import spack.modules
+import spack.modules.lmod
+import spack.repo
 import spack.spec
 import spack.store
+from spack.installer import PackageInstaller
 
 module = spack.main.SpackCommand("module")
 
@@ -182,8 +184,8 @@ def test_setdefault_command(mutable_database, mutable_config):
     # Install two different versions of pkg-a
     other_spec, preferred = "pkg-a@1.0", "pkg-a@2.0"
 
-    spack.spec.Spec(other_spec).concretized().package.do_install(fake=True)
-    spack.spec.Spec(preferred).concretized().package.do_install(fake=True)
+    specs = [spack.spec.Spec(other_spec).concretized(), spack.spec.Spec(preferred).concretized()]
+    PackageInstaller([s.package for s in specs], explicit=True, fake=True).install()
 
     writers = {
         preferred: writer_cls(spack.spec.Spec(preferred).concretized(), "default"),

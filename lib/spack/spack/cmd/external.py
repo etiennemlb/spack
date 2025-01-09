@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 import argparse
@@ -18,9 +17,9 @@ import spack.config
 import spack.cray_manifest as cray_manifest
 import spack.detection
 import spack.error
+import spack.package_base
 import spack.repo
 import spack.spec
-import spack.util.environment
 from spack.cmd.common import arguments
 
 description = "manage external packages in Spack configuration"

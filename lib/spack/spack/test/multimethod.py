@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -7,14 +6,13 @@
 
 import pytest
 
+import spack.config
 import spack.platforms
-import spack.repo
 import spack.spec
 from spack.multimethod import NoSuchMethodError
 
 pytestmark = [
     pytest.mark.usefixtures("mock_packages", "config"),
-    pytest.mark.only_clingo("The original concretizer cannot concretize most of the specs"),
     pytest.mark.not_on_windows("Not running on windows"),
 ]
 

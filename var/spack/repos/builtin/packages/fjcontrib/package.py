@@ -1,9 +1,6 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
-import inspect
 
 from spack.package import *
 
@@ -87,9 +84,9 @@ class Fjcontrib(AutotoolsPackage):
     def build(self, spec, prefix):
         with working_dir(self.build_directory):
             for target in self.build_targets:
-                inspect.getmodule(self).make(target)
+                make(target)
 
     def install(self, spec, prefix):
         with working_dir(self.build_directory):
             for target in self.install_targets:
-                inspect.getmodule(self).make(target)
+                make(target)
