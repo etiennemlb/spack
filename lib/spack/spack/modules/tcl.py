@@ -5,6 +5,7 @@
 """This module implements the classes necessary to generate Tcl
 non-hierarchical modules.
 """
+
 import os.path
 from typing import Dict, Optional, Tuple
 
@@ -62,7 +63,8 @@ class TclFileLayout(BaseFileLayout):
     @property
     def modulerc(self):
         """Returns the modulerc file associated with current module file"""
-        return os.path.join(os.path.dirname(self.filename), ".modulerc")
+        # return os.path.join(os.path.dirname(self.filename), ".modulerc")
+        return os.path.join(os.path.dirname(self.filename), ".modulerc.lua")
 
 
 class TclContext(BaseContext):
@@ -79,6 +81,7 @@ class TclModulefileWriter(BaseModuleFileWriter):
 
     default_template = "modules/modulefile.tcl"
 
-    modulerc_header = ["#%Module4.7"]
+    modulerc_header = []  # ["#%Module4.7"]
 
-    hide_cmd_format = "module-hide --soft --hidden-loaded %s"
+    # hide_cmd_format = "module-hide --soft --hidden-loaded %s"
+    hide_cmd_format = 'hide_version("%s")'
