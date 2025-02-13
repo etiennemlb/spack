@@ -14,7 +14,10 @@ class CxiDriver(Package):
 
     license("GPL-2.0")
 
-    version("main", branch="main")
+    version("develop", branch="main")
+    # Something changed in the headers which the libfabric 1.22 is not aware of.
+    # We thus get build issues.
+    version("1.0.0", commit="3233be5b14930a9d571fed44bde259e17088c214")
 
     def install(self, spec, prefix):
         with working_dir(self.stage.source_path):
