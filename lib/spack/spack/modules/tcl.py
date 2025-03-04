@@ -6,6 +6,7 @@
 non-hierarchical modules.
 """
 
+import os
 import os.path
 from typing import Dict, Optional, Tuple
 
