@@ -16,6 +16,7 @@ class Libcxi(AutotoolsPackage):
 
     # no releases, tags: see https://github.com/HewlettPackard/shs-libcxi/issues/2
     version("main", branch="main")
+    version("1.0.0", commit="dcf4a0937f578155c23dd215cf40a6b18e25003b")
 
     variant("level_zero", default=False, description="Enable level zero support")
     variant("cuda", default=False, description="Build with CUDA support")
@@ -49,7 +50,7 @@ class Libcxi(AutotoolsPackage):
             string=True,
         )
 
-    @when("@main")
+    @when("@1.0.0")
     def autoreconf(self, spec, prefix):
         sh = which("sh")
         sh("autogen.sh")
